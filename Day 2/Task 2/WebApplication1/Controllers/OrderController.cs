@@ -33,9 +33,24 @@ namespace WebApplication1.Controllers
             return View(Order);
         }
 
+
         public ActionResult Create()
         {
             return View();
+        }
+
+
+        [HttpPost]
+        public ActionResult Create([Bind(Include = "OrderId,Customer_name,Order_amount, Order_date")] Order Order)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Orders.Add(Order);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            return View(Order);
         }
 
 
@@ -54,6 +69,18 @@ namespace WebApplication1.Controllers
         }
 
 
+        [HttpPost]
+        public ActionResult Edit([Bind(Include = "OrderId,Customer_name,Order_amount, Order_date")] Order Order)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(Order).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(Order);
+        }
+
 
         public ActionResult Delete(int? id)
         {
@@ -68,6 +95,7 @@ namespace WebApplication1.Controllers
             }
             return View(Order);
         }
+
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
